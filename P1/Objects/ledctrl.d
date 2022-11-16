@@ -1,0 +1,10 @@
+.\objects\ledctrl.o: Src\Hal\LedCtrl.c
+.\objects\ledctrl.o: .\Src\Hal\Inc\LedCtrl.h
+.\objects\ledctrl.o: .\Src\Hal\Inc\LedCtrl_Types.h
+.\objects\ledctrl.o: .\Src\Common\Std_Types.h
+.\objects\ledctrl.o: .\Src\Common\Platform_Types.h
+.\objects\ledctrl.o: .\Src\Common\Compiler.h
+.\objects\ledctrl.o: .\Src\Mcal\Dio\Inc\Dio.h
+.\objects\ledctrl.o: .\Src\Mcal\Dio\Inc\Dio_Types.h
+.\objects\ledctrl.o: .\Src\Mcal\General\Port_reg.h
+.\objects\ledctrl.o: .\Src\Mcal\General\Port_regdef.h

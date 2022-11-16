@@ -1,0 +1,10 @@
+.\objects\led.o: Src\Hal\Led\Led.c
+.\objects\led.o: .\Src\Hal\Led\Inc\Led.h
+.\objects\led.o: .\Src\Hal\Led\Inc\Led_Types.h
+.\objects\led.o: .\Src\Common\Std_Types.h
+.\objects\led.o: .\Src\Common\Platform_Types.h
+.\objects\led.o: .\Src\Common\Compiler.h
+.\objects\led.o: .\Src\Mcal\Dio\Inc\Dio.h
+.\objects\led.o: .\Src\Mcal\Dio\Inc\Dio_Types.h
+.\objects\led.o: .\Src\Mcal\General\Port_reg.h
+.\objects\led.o: .\Src\Mcal\General\Port_regdef.h

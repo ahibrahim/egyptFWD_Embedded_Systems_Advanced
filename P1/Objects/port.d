@@ -1,0 +1,11 @@
+.\objects\port.o: Src\Mcal\Port\Port.c
+.\objects\port.o: .\Src\Mcal\Port\Inc\Port.h
+.\objects\port.o: .\Src\Mcal\General\Port_reg.h
+.\objects\port.o: .\Src\Mcal\General\Port_regdef.h
+.\objects\port.o: .\Src\Common\Std_Types.h
+.\objects\port.o: .\Src\Common\Platform_Types.h
+.\objects\port.o: .\Src\Common\Compiler.h
+.\objects\port.o: .\Src\Mcal\General\SysCtrl_reg.h
+.\objects\port.o: .\Src\Mcal\General\SysCtrl_regdef.h
+.\objects\port.o: .\Src\Mcal\Port\Inc\Port_Types.h
+.\objects\port.o: .\Src\Config\Port_Cfg.h

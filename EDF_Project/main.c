@@ -65,6 +65,7 @@
 	/* Peripheral includes. */
 	#include "serial.h"
 	#include "GPIO.h"
+	#include "string.h"
 
 
 	/*-----------------------------------------------------------*/
@@ -83,12 +84,12 @@
 
 	#define MESSAGE_LENGTH         15
 	/* Button Messages */
-	const char RISING_EDGE[MESSAGE_LENGTH]  = {'#','#','#','#','R','I','S','I','N','G','#','#','#','#','\n'};
-	const char FALLING_EDGE[MESSAGE_LENGTH] = {'#','#','#','#','F','A','L','L','I','N','G','#','#','#','\n'};
+	const char RISING_EDGE_1[MESSAGE_LENGTH]  = {'R','I','S','I','N','G','_','1','!',' ',' ',' ',' ',' ','\n'};
+	const char FALLING_EDGE_1[MESSAGE_LENGTH] = {'F','A','L','L','I','N','G','_','1','!',' ',' ',' ',' ','\n'};
+	const char RISING_EDGE_2[MESSAGE_LENGTH]  = {'R','I','S','I','N','G','_','2','!',' ',' ',' ',' ',' ','\n'};
+	const char FALLING_EDGE_2[MESSAGE_LENGTH] = {'F','A','L','L','I','N','G','_','2','!',' ',' ',' ',' ','\n'};
 	/* Periodic Message*/
-	const char PERIODIC_MESSAGE[MESSAGE_LENGTH] = {'#','#','M','O','N','I','T','O','R','I','N','G','#','#','\n'};
-	/* Default Message*/
-	const char DEFAULT_MESSAGE[MESSAGE_LENGTH] = {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','\n'};
+	const char PERIODIC_MESSAGE[MESSAGE_LENGTH] = {'M','O','N','I','T','O','R','I','N','G','.','.','.','.','\n'};
 
 	/* global variables for runtime measurments*/
 	int Task1_Tin = 0, Task2_Tin = 0, Task3_Tin = 0, Task4_Tin = 0, Task5_Tin = 0, Task6_Tin = 0;
@@ -103,7 +104,7 @@
 	TaskHandle_t xTask5_Handle = NULL;
 	TaskHandle_t xTask6_Handle = NULL;
 
-	QueueHandle_t xQueue1, xQueue2, xQueue3;
+	QueueHandle_t xQueue;
 	/*
 	 * Configure the processor for use with the Keil demo board.  This is very
 	 * minimal as most of the setup is managed by the settings in the project
@@ -134,17 +135,17 @@
 						if (prevLevel == PIN_IS_LOW)
 						{
 							/* Rising Edge Detected */	
-							xQueueSend( xQueue1,
-												 ( void * ) &RISING_EDGE,
-												 ( TickType_t ) 0 );
+							xQueueOverwrite( xQueue,
+												 ( void * ) &RISING_EDGE_1);
 						}
 						else
 						{
 							/* Falling Edge Detected */	
-							xQueueSend( xQueue1,
-												 ( void * ) &FALLING_EDGE,
-												 ( TickType_t ) 0 );
+							xQueueOverwrite( xQueue,
+												 ( void * ) &FALLING_EDGE_1);
 						}
+						
+						prevLevel = currLevel;
 							
 					}
 					else
@@ -176,17 +177,17 @@
 						if (prevLevel == PIN_IS_LOW)
 						{
 							/* Rising Edge Detected */	
-							xQueueSend( xQueue2,
-												 ( void * ) &RISING_EDGE,
-												 ( TickType_t ) 0 );
+							xQueueOverwrite( xQueue,
+												 ( void * ) &RISING_EDGE_2);
 						}
 						else
 						{
 							/* Falling Edge Detected */	
-							xQueueSend( xQueue2,
-												 ( void * ) &FALLING_EDGE,
-												 ( TickType_t ) 0 );
+							xQueueOverwrite( xQueue,
+												 ( void * ) &FALLING_EDGE_2);
 						}
+						
+						prevLevel = currLevel;
 							
 					}
 					else
@@ -206,9 +207,8 @@
 			/* This task will send preiodic string every 100ms to the consumer task */
 			for( ;; )
 			{
-					xQueueSend( xQueue3,
-												 ( void * ) &PERIODIC_MESSAGE,
-												 ( TickType_t ) 0 );
+					xQueueOverwrite( xQueue,
+												 ( void * ) &PERIODIC_MESSAGE);
 												 
 					vTaskDelayUntil(&xLastWakeTime, 100);
 			}
@@ -217,9 +217,7 @@
 	void vTask_4( void * pvParameters )
 	{
 			TickType_t xLastWakeTime = xTaskGetTickCount();
-			char msg1[MESSAGE_LENGTH] = {' '};
-			char msg2[MESSAGE_LENGTH] = {' '};
-			char msg3[MESSAGE_LENGTH] = {' '};
+			char msg[MESSAGE_LENGTH] = {NULL};
 			
 			
 			/* Assign a tag value to the task. */
@@ -228,53 +226,51 @@
 			/* This is the consumer task which will write on UART any received string from other tasks */
 			for( ;; )
 			{
-				if( xQueueReceive( xQueue1,
-													 &(msg1),
+				if( xQueueReceive( xQueue,
+													 &(msg),
 													 (TickType_t )0) == pdPASS)
 				{
 					 /* msg1 now contains a copy of xMessage. */
-						vSerialPutString((signed char *)msg1, MESSAGE_LENGTH);
+						vSerialPutString((signed char *)msg, MESSAGE_LENGTH);
+					(void) memset(msg,NULL,MESSAGE_LENGTH);
 				}
 				else
 				{
 						/* msg1 is empty */
-						vSerialPutString((signed char *)DEFAULT_MESSAGE, MESSAGE_LENGTH);
 						
 				}
 					
 				
-				if( xQueueReceive( xQueue2,
-													 &(msg2),
+				if( xQueueReceive( xQueue,
+													 &(msg),
 													 (TickType_t )0) == pdPASS)
 				{
 					 /* msg2 now contains a copy of xMessage. */
-						vSerialPutString((signed char *)msg2, MESSAGE_LENGTH);
+						vSerialPutString((signed char *)msg, MESSAGE_LENGTH);
+					(void) memset(msg,NULL,MESSAGE_LENGTH);
 				}
 				else
 				{
 						/* msg2 is empty */
-						vSerialPutString((signed char *)DEFAULT_MESSAGE, MESSAGE_LENGTH);
 						
 				}
 				
-				if( xQueueReceive( xQueue3,
-													 &(msg3),
+				if( xQueueReceive( xQueue,
+													 &(msg),
 													 (TickType_t )0) == pdPASS)
 				{
 					 /* msg3 now contains a copy of xMessage. */
-						vSerialPutString((signed char *)msg3, MESSAGE_LENGTH);
+						vSerialPutString((signed char *)msg, MESSAGE_LENGTH);
+					(void) memset(msg,NULL,MESSAGE_LENGTH);
 				}
 				else
 				{
 						/* msg3 is empty */
-						vSerialPutString((signed char *)DEFAULT_MESSAGE, MESSAGE_LENGTH);
 						
 				}
-				
-				/* Reset Queues to their empty values */
-				xQueueReset(xQueue1);
-				xQueueReset(xQueue2);
-				xQueueReset(xQueue3);
+					
+					/* Reset Queues to original empty state */
+					xQueueReset(xQueue);
 				
 				vTaskDelayUntil(&xLastWakeTime, 20);
 			}
@@ -331,12 +327,9 @@ void vTask_6( void * pvParameters )
 	int main( void )
 	{
 
-			/* Create a queue capable of containing 50 unsigned char values. */
-			xQueue1 = xQueueCreate((int) MESSAGE_LENGTH, sizeof(char)); 
-			xQueue2 = xQueueCreate((int) MESSAGE_LENGTH, sizeof(char)); 
-			xQueue3 = xQueueCreate((int) MESSAGE_LENGTH, sizeof(char));
-		
-			if (xQueue1 == NULL || xQueue2 == NULL || xQueue3 == NULL) return -1;
+			/* Create a queue capable of containing 15 unsigned char values. */
+			xQueue = xQueueCreate((int) 1, sizeof(char[MESSAGE_LENGTH]));
+			if (xQueue == NULL) return -1;
 		
 			/* Setup the hardware for use with the Keil demo board. */
 			prvSetupHardware();

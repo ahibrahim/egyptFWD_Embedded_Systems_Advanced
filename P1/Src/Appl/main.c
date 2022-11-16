@@ -1,9 +1,12 @@
 #include "main.h"
 
 #define TIMERDEFAULTVALUE        0xF42400U   /* 1 second */
-// state variable to keep track of led current state
 
+/* state variable to keep track of led current state */
 uint8 LedState = LED_OFF;
+
+/* Number of seconds counted by SysTick */
+uint8 SecondsCount = 0U;
 
 int main()
 {
@@ -26,19 +29,21 @@ int main()
 
 void Appl_SysTick_Cbk()
 {
-	if (LedState == LED_OFF)
+	SecondsCount++;
+	if ((LedState == LED_OFF) && (SecondsCount == OFF_TIME_COUNT_SIGNAL))
 	{
 		Led_Ctrl (LED_BLUE, LED_ON);
-		SysTick_SetTime(TIMERDEFAULTVALUE * OFF_TIME_COUNT_SIGNAL);
+		SecondsCount = 0;
 		LedState = LED_ON;
 	}
-	else
+	else if ((LedState == LED_ON) && (SecondsCount == ON_TIME_COUNT_SIGNAL))
 	{
 		Led_Ctrl (LED_BLUE, LED_OFF);
-		SysTick_SetTime(TIMERDEFAULTVALUE * ON_TIME_COUNT_SIGNAL);
+		SecondsCount = 0;
 		LedState = LED_OFF;
 	}
-
+	
+	SysTick_SetTime(TIMERDEFAULTVALUE);
 }	
 
 

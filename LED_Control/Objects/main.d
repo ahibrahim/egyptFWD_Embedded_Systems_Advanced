@@ -1,5 +1,5 @@
 .\objects\main.o: Src\Appl\main.c
-.\objects\main.o: ..\P1\main.h
+.\objects\main.o: ..\LED_Control\main.h
 .\objects\main.o: .\Src\Common\Std_Types.h
 .\objects\main.o: .\Src\Common\Platform_Types.h
 .\objects\main.o: .\Src\Common\Compiler.h

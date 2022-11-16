@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\Src\Common;.\Src\Config;.\Src\Hal\Inc;.\Src\Mcal\Dio\Inc;.\Src\Mcal\General;.\Src\Mcal\IntCtrl\Inc;.\Src\Mcal\Port\Inc;.\Src\Mcal\SysTick\Inc;.\Src\Hal\Led\Inc;.\Src\Hal\Switch\Inc;..\P1</IncludePath>
+              <IncludePath>.\Src\Common;.\Src\Config;.\Src\Hal\Inc;.\Src\Mcal\Dio\Inc;.\Src\Mcal\General;.\Src\Mcal\IntCtrl\Inc;.\Src\Mcal\Port\Inc;.\Src\Mcal\SysTick\Inc;.\Src\Hal\Led\Inc;.\Src\Hal\Switch\Inc;..\LED_Control</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
